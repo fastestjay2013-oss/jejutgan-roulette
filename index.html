@@ -386,7 +386,7 @@ const CAN_COLA = svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60
 const PRIZES = [
   { num:1, name:'5만원 식사권',         pct: 0.2, color:'#AA00FF', emoji:'⭐', img: TICKET_GOLD      },
   { num:2, name:'1만원 식사권',         pct: 3.8, color:'#FF1744', emoji:'🎫', img: TICKET_SILVER    },
-  { num:3, name:&파송송계란찜',         pct:20,   color:'#FFAB00', emoji:'🥘', img:null               },
+  { num:3, name:'파송송계란찜',         pct:20,   color:'#FFAB00', emoji:'🥘', img:null               },
   { num:4, name:'흑돼지 김치찌개 리필', pct:25,   color:'#00C853', emoji:'🍲', img:'prize_kimchi.jpg' },
   { num:5, name:'한라봉주스',           pct:11,   color:'#2979FF', emoji:'🧃', img: BOTTLE_JUICE      },
   { num:6, name:'탄산음료',             pct:40,   color:'#00BFA5', emoji:'🥤', img: CAN_COLA          },
@@ -537,7 +537,6 @@ function closeResult() {
   if (!localStorage.getItem(STORAGE_KEY)) {
     document.getElementById('spinBtn').disabled = false;
   } else {
-    // 모달 닫은 직후 당첨 카드 표시 (이미 카드 없을 때만)
     if (!document.getElementById('alreadyCard')) {
       showAlreadyCard();
     }
@@ -563,7 +562,6 @@ function confetti() {
   }
 }
 
-// ── 중복 참여 방지 (localStorage) ─────────────
 const STORAGE_KEY = 'jejutgan_spun';
 
 function showAlreadyCard() {
