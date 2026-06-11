@@ -6,52 +6,289 @@
   <title>제줏간 위례중앙광장점 룰렛 이벤트</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --gold: #FFD700; --orange: #FF8C00; --dark: #1a0800; --darker: #0d0000; }
-    body { font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; background: radial-gradient(ellipse at top, #2d1000 0%, #1a0800 50%, #0a0000 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px 16px 40px; color: #fff; overflow-x: hidden; }
-    .header { text-align: center; width: 100%; max-width: 480px; margin-bottom: 20px; }
-    .badge-100 { display: inline-block; background: linear-gradient(135deg, #FF3333, #CC0000); color: #fff; font-size: clamp(16px, 4.5vw, 22px); font-weight: 900; padding: 8px 22px; border-radius: 30px; margin-bottom: 12px; box-shadow: 0 4px 18px rgba(255,50,50,0.5); letter-spacing: 0.5px; }
-    .brand-title { font-size: clamp(20px, 5.5vw, 28px); font-weight: 900; color: var(--gold); letter-spacing: 1px; margin-bottom: 10px; }
-    h1 { font-size: clamp(26px, 7vw, 38px); font-weight: 900; background: linear-gradient(135deg, var(--gold), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.3; word-break: keep-all; margin-bottom: 4px; }
-    .subtitle { font-size: 13px; color: rgba(255,255,255,0.45); }
-    .wheel-section { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 480px; margin-bottom: 24px; }
-    .wheel-wrap { position: relative; width: min(300px, 82vw); height: min(300px, 82vw); margin-bottom: 20px; }
-    #wheelCanvas { width: 100%; height: 100%; filter: drop-shadow(0 0 24px rgba(255,140,0,0.35)); }
-    .pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); z-index: 5; width: 0; height: 0; border-left: 13px solid transparent; border-right: 13px solid transparent; border-top: 28px solid var(--gold); filter: drop-shadow(0 3px 6px rgba(255,200,0,0.7)); }
-    .spin-btn { padding: 15px 52px; background: linear-gradient(135deg, var(--gold), #FF6F00); color: var(--dark); border: none; border-radius: 60px; font-size: 19px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 28px rgba(255,140,0,0.4); transition: transform 0.15s, box-shadow 0.15s; -webkit-tap-highlight-color: transparent; letter-spacing: 1px; }
+
+    :root {
+      --gold: #FFD700;
+      --orange: #FF8C00;
+      --dark: #1a0800;
+      --darker: #0d0000;
+    }
+
+    body {
+      font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: radial-gradient(ellipse at top, #2d1000 0%, #1a0800 50%, #0a0000 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 40px;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ── 헤더 ── */
+    .header {
+      text-align: center;
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 20px;
+    }
+
+    .badge-100 {
+      display: inline-block;
+      background: linear-gradient(135deg, #FF3333, #CC0000);
+      color: #fff;
+      font-size: clamp(16px, 4.5vw, 22px);
+      font-weight: 900;
+      padding: 8px 22px;
+      border-radius: 30px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 18px rgba(255,50,50,0.5);
+      letter-spacing: 0.5px;
+    }
+
+    .brand-title {
+      font-size: clamp(20px, 5.5vw, 28px);
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(26px, 7vw, 38px);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.3;
+      word-break: keep-all;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+    }
+
+    /* ── 룰렛 영역 ── */
+    .wheel-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 24px;
+    }
+
+    .wheel-wrap {
+      position: relative;
+      width: min(300px, 82vw);
+      height: min(300px, 82vw);
+      margin-bottom: 20px;
+    }
+
+    #wheelCanvas {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 24px rgba(255,140,0,0.35));
+    }
+
+    .pointer {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      width: 0; height: 0;
+      border-left: 13px solid transparent;
+      border-right: 13px solid transparent;
+      border-top: 28px solid var(--gold);
+      filter: drop-shadow(0 3px 6px rgba(255,200,0,0.7));
+    }
+
+    .spin-btn {
+      padding: 15px 52px;
+      background: linear-gradient(135deg, var(--gold), #FF6F00);
+      color: var(--dark);
+      border: none;
+      border-radius: 60px;
+      font-size: 19px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(255,140,0,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      letter-spacing: 1px;
+    }
     .spin-btn:active:not(:disabled) { transform: scale(0.93); }
-    .spin-btn:disabled { background: linear-gradient(135deg, #555, #333); color: #777; box-shadow: none; cursor: default; }
-    .prize-section { width: 100%; max-width: 480px; }
-    .prize-section-title { font-size: 15px; font-weight: 800; color: var(--gold); text-align: center; margin-bottom: 14px; letter-spacing: 1px; }
-    .prize-list { display: flex; flex-direction: column; gap: 10px; }
-    .prize-card { display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,200,80,0.2); border-radius: 16px; padding: 12px 14px; }
-    .prize-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; flex-shrink: 0; color: #fff; }
-    .prize-img-wrap { width: 64px; height: 64px; border-radius: 12px; overflow: hidden; flex-shrink: 0; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; }
-    .prize-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .prize-img-emoji { font-size: 32px; }
-    .prize-info { flex: 1; }
-    .prize-name { font-size: 15px; font-weight: 800; color: #fff; line-height: 1.3; margin-bottom: 4px; }
-    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 300; align-items: center; justify-content: center; padding: 24px; }
+    .spin-btn:disabled {
+      background: linear-gradient(135deg, #555, #333);
+      color: #777; box-shadow: none; cursor: default;
+    }
+
+    /* ── 경품 목록 ── */
+    .prize-section {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .prize-section-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 14px;
+      letter-spacing: 1px;
+    }
+
+    .prize-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .prize-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,200,80,0.2);
+      border-radius: 16px;
+      padding: 12px 14px;
+      transition: background 0.2s;
+    }
+
+    .prize-num {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 900;
+      flex-shrink: 0;
+      color: #fff;
+    }
+
+    .prize-img-wrap {
+      width: 64px; height: 64px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .prize-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    .prize-img-emoji {
+      font-size: 32px;
+    }
+
+    .prize-info {
+      flex: 1;
+    }
+
+    .prize-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    /* ── 결과 오버레이 ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
     .overlay.show { display: flex; }
-    .result-card { background: linear-gradient(160deg, #200d00, #2d1500); border: 2px solid var(--gold); border-radius: 28px; padding: 32px 24px 28px; text-align: center; max-width: 320px; width: 100%; box-shadow: 0 0 60px rgba(255,150,0,0.2); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-    @keyframes popIn { from { transform: scale(0.35) rotate(-6deg); opacity: 0; } to { transform: scale(1) rotate(0deg); opacity: 1; } }
-    .result-img-wrap { width: 140px; height: 140px; border-radius: 20px; overflow: hidden; margin: 0 auto 16px; border: 2px solid rgba(255,215,0,0.4); background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; }
+
+    .result-card {
+      background: linear-gradient(160deg, #200d00, #2d1500);
+      border: 2px solid var(--gold);
+      border-radius: 28px;
+      padding: 32px 24px 28px;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+      box-shadow: 0 0 60px rgba(255,150,0,0.2);
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.35) rotate(-6deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .result-img-wrap {
+      width: 140px; height: 140px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 0 auto 16px;
+      border: 2px solid rgba(255,215,0,0.4);
+      background: rgba(255,255,255,0.06);
+      display: flex; align-items: center; justify-content: center;
+    }
     .result-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
     .result-emoji-big { font-size: 72px; }
-    .r-label { font-size: 13px; color: rgba(255,255,255,0.5); letter-spacing: 1px; margin-bottom: 6px; }
-    .r-prize { font-size: 24px; font-weight: 900; background: linear-gradient(135deg, var(--gold), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.35; margin-bottom: 16px; }
-    .r-tip { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.65; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 11px 14px; margin-bottom: 22px; }
-    .r-close { padding: 13px 44px; background: linear-gradient(135deg, var(--gold), #FF6F00); color: var(--dark); border: none; border-radius: 50px; font-size: 16px; font-weight: 800; cursor: pointer; }
-    .confetti { position: fixed; top: -12px; pointer-events: none; opacity: 0; animation: fall linear forwards; }
-    @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(105vh) rotate(800deg); opacity: 0; } }
+
+    .r-label  { font-size: 13px; color: rgba(255,255,255,0.5); letter-spacing: 1px; margin-bottom: 6px; }
+    .r-prize  {
+      font-size: 24px; font-weight: 900;
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.35; margin-bottom: 16px;
+    }
+    .r-tip {
+      font-size: 13px; color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 11px 14px;
+      margin-bottom: 22px;
+    }
+    .r-close {
+      padding: 13px 44px;
+      background: linear-gradient(135deg, var(--gold), #FF6F00);
+      color: var(--dark);
+      border: none; border-radius: 50px;
+      font-size: 16px; font-weight: 800; cursor: pointer;
+    }
+
+    /* ── 색종이 ── */
+    .confetti {
+      position: fixed; top: -12px;
+      pointer-events: none; opacity: 0;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(800deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
+
+<!-- 헤더 -->
 <div class="header">
   <span class="badge-100">방문 고객 100% 당첨!</span>
   <div class="brand-title">제줏간 위례중앙광장점</div>
   <h1>룰렛 이벤트</h1>
   <p class="subtitle">버튼을 눌러 오늘의 혜택을 뽑아보세요!</p>
 </div>
+
+<!-- 룰렛 -->
 <div class="wheel-section">
   <div class="wheel-wrap">
     <div class="pointer"></div>
@@ -59,107 +296,328 @@
   </div>
   <button class="spin-btn" id="spinBtn">🎲 룰렛 돌리기</button>
 </div>
+
+<!-- 경품 목록 -->
 <div class="prize-section">
   <p class="prize-section-title">✦ 경품 안내 ✦</p>
   <div class="prize-list" id="prizeList"></div>
 </div>
+
+<!-- 결과 모달 -->
 <div class="overlay" id="overlay">
   <div class="result-card">
-    <div class="result-img-wrap" id="rImgWrap"><div class="result-emoji-big" id="rEmoji">🎉</div></div>
+    <div class="result-img-wrap" id="rImgWrap">
+      <div class="result-emoji-big" id="rEmoji">🎉</div>
+    </div>
     <p class="r-label">🎊 축하합니다! 당첨 혜택은</p>
     <div class="r-prize" id="rPrize">-</div>
     <div class="r-tip">직원에게 이 화면을 보여주시면<br>혜택을 바로 받으실 수 있습니다 😊</div>
     <button class="r-close" onclick="closeResult()">확인</button>
   </div>
 </div>
+
 <script>
-function svgUri(s){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);}
-const TICKET_GOLD=svgUri('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 68"><defs><linearGradient id="tgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFD740"/><stop offset="55%" stop-color="#FFFDE7"/><stop offset="100%" stop-color="#FF8F00"/></linearGradient></defs><rect width="100" height="68" rx="8" fill="url(#tgg)" stroke="#FFA000" stroke-width="2"/><line x1="74" y1="5" x2="74" y2="63" stroke="#FFA000" stroke-width="1.5" stroke-dasharray="5,4"/><circle cx="74" cy="0" r="5" fill="#1a0800"/><circle cx="74" cy="68" r="5" fill="#1a0800"/><polygon points="37,8 39.4,15.3 47,15.3 41,19.7 43.4,27 37,22.6 30.6,27 33,19.7 27,15.3 34.6,15.3" fill="#E65100"/><text x="37" y="46" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#7A5500" text-anchor="middle">5만원</text><text x="37" y="62" font-family="Arial,sans-serif" font-size="11" fill="#9A6E00" text-anchor="middle">식 사 권</text></svg>');
-const TICKET_SILVER=svgUri('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 68"><defs><linearGradient id="tsg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ECEFF1"/><stop offset="55%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#90A4AE"/></linearGradient></defs><rect width="100" height="68" rx="8" fill="url(#tsg)" stroke="#B0BEC5" stroke-width="2"/><line x1="74" y1="5" x2="74" y2="63" stroke="#B0BEC5" stroke-width="1.5" stroke-dasharray="5,4"/><circle cx="74" cy="0" r="5" fill="#1a0800"/><circle cx="74" cy="68" r="5" fill="#1a0800"/><text x="37" y="30" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#37474F" text-anchor="middle">1만원</text><text x="37" y="48" font-family="Arial,sans-serif" font-size="11" fill="#607D8B" text-anchor="middle">식 사 권</text></svg>');
-const BOTTLE_JUICE=svgUri('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 90"><rect x="22" y="2" width="16" height="10" rx="4" fill="#388E3C"/><rect x="20" y="11" width="20" height="12" rx="3" fill="#FFF9C4"/><path d="M14,22 Q10,30 10,42 L10,76 Q10,82 30,82 Q50,82 50,76 L50,42 Q50,30 46,22 Z" fill="#FFF176"/><path d="M16,28 Q13,35 13,44 L13,74 Q13,79 30,79 Q47,79 47,74 L47,44 Q47,35 44,28 Z" fill="#FFB300" opacity="0.85"/><rect x="15" y="42" width="30" height="22" rx="4" fill="white" opacity="0.85"/><text x="30" y="52" font-family="Arial,sans-serif" font-size="7" font-weight="bold" fill="#E65100" text-anchor="middle">한라봉</text><text x="30" y="62" font-family="Arial,sans-serif" font-size="7" fill="#F57F17" text-anchor="middle">JUICE</text><ellipse cx="20" cy="35" rx="4" ry="8" fill="white" opacity="0.25"/></svg>');
-const CAN_COLA=svgUri('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 80"><ellipse cx="30" cy="68" rx="20" ry="6" fill="#B71C1C"/><rect x="10" y="14" width="40" height="54" fill="#D32F2F"/><rect x="10" y="14" width="40" height="18" fill="#EF5350"/><rect x="10" y="26" width="40" height="6" fill="#EF5350"/><ellipse cx="30" cy="14" rx="20" ry="6" fill="#EF9A9A"/><rect x="23" y="7" width="14" height="9" rx="4" fill="#9E9E9E"/><rect x="27" y="5" width="6" height="4" rx="2" fill="#BDBDBD"/><text x="30" y="55" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="white" text-anchor="middle">COLA</text></svg>');
-const PRIZES=[
-  {num:1,name:'5만원 식사권',pct:0.2,color:'#AA00FF',emoji:'⭐',img:TICKET_GOLD},
-  {num:2,name:'1만원 식사권',pct:3.8,color:'#FF1744',emoji:'🎫',img:TICKET_SILVER},
-  {num:3,name:'파송송계란찜',pct:20,color:'#FFAB00',emoji:'🥘',img:null},
-  {num:4,name:'흑돼지 김치찌개 리필',pct:25,color:'#00C853',emoji:'🍲',img:null},
-  {num:5,name:'한라봉주스',pct:11,color:'#2979FF',emoji:'🧃',img:BOTTLE_JUICE},
-  {num:6,name:'탄산음료',pct:40,color:'#00BFA5',emoji:'🥤',img:CAN_COLA},
+// ═══════════════════════════════════════════════
+//  경품 설정  (pct 합계 = 100)
+//  img: 이미지 파일명 (같은 폴더에 업로드) or null
+// ═══════════════════════════════════════════════
+// ── 인라인 SVG 이미지 ──────────────────────────
+function svgUri(s) {
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s);
+}
+
+const TICKET_GOLD = svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 68">
+  <defs><linearGradient id="tgg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#FFD740"/>
+    <stop offset="55%" stop-color="#FFFDE7"/>
+    <stop offset="100%" stop-color="#FF8F00"/>
+  </linearGradient></defs>
+  <rect width="100" height="68" rx="8" fill="url(#tgg)" stroke="#FFA000" stroke-width="2"/>
+  <line x1="74" y1="5" x2="74" y2="63" stroke="#FFA000" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <circle cx="74" cy="0" r="5" fill="#1a0800"/>
+  <circle cx="74" cy="68" r="5" fill="#1a0800"/>
+  <polygon points="37,8 39.4,15.3 47,15.3 41,19.7 43.4,27 37,22.6 30.6,27 33,19.7 27,15.3 34.6,15.3" fill="#E65100"/>
+  <text x="37" y="46" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#7A5500" text-anchor="middle">5만원</text>
+  <text x="37" y="62" font-family="Arial,sans-serif" font-size="11" fill="#9A6E00" text-anchor="middle">식 사 권</text>
+</svg>`);
+
+const TICKET_SILVER = svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 68">
+  <defs><linearGradient id="tsg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#ECEFF1"/>
+    <stop offset="55%" stop-color="#FFFFFF"/>
+    <stop offset="100%" stop-color="#90A4AE"/>
+  </linearGradient></defs>
+  <rect width="100" height="68" rx="8" fill="url(#tsg)" stroke="#B0BEC5" stroke-width="2"/>
+  <line x1="74" y1="5" x2="74" y2="63" stroke="#B0BEC5" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <circle cx="74" cy="0" r="5" fill="#1a0800"/>
+  <circle cx="74" cy="68" r="5" fill="#1a0800"/>
+  <text x="37" y="30" font-family="Arial,sans-serif" font-size="15" font-weight="bold" fill="#37474F" text-anchor="middle">1만원</text>
+  <text x="37" y="48" font-family="Arial,sans-serif" font-size="11" fill="#607D8B" text-anchor="middle">식 사 권</text>
+</svg>`);
+
+const BOTTLE_JUICE = svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 90">
+  <!-- 병뚜껑 -->
+  <rect x="22" y="2" width="16" height="10" rx="4" fill="#388E3C"/>
+  <!-- 병 목 -->
+  <rect x="20" y="11" width="20" height="12" rx="3" fill="#FFF9C4"/>
+  <!-- 병 몸통 -->
+  <path d="M14,22 Q10,30 10,42 L10,76 Q10,82 30,82 Q50,82 50,76 L50,42 Q50,30 46,22 Z" fill="#FFF176"/>
+  <!-- 주스 색상 (안쪽) -->
+  <path d="M16,28 Q13,35 13,44 L13,74 Q13,79 30,79 Q47,79 47,74 L47,44 Q47,35 44,28 Z" fill="#FFB300" opacity="0.85"/>
+  <!-- 라벨 -->
+  <rect x="15" y="42" width="30" height="22" rx="4" fill="white" opacity="0.85"/>
+  <text x="30" y="52" font-family="Arial,sans-serif" font-size="7" font-weight="bold" fill="#E65100" text-anchor="middle">한라봉</text>
+  <text x="30" y="62" font-family="Arial,sans-serif" font-size="7" fill="#F57F17" text-anchor="middle">JUICE</text>
+  <!-- 하이라이트 -->
+  <ellipse cx="20" cy="35" rx="4" ry="8" fill="white" opacity="0.25"/>
+</svg>`);
+
+const CAN_COLA = svgUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 80">
+  <ellipse cx="30" cy="68" rx="20" ry="6" fill="#B71C1C"/>
+  <rect x="10" y="14" width="40" height="54" fill="#D32F2F"/>
+  <rect x="10" y="14" width="40" height="18" fill="#EF5350"/>
+  <rect x="10" y="26" width="40" height="6" fill="#EF5350"/>
+  <ellipse cx="30" cy="14" rx="20" ry="6" fill="#EF9A9A"/>
+  <rect x="23" y="7" width="14" height="9" rx="4" fill="#9E9E9E"/>
+  <rect x="27" y="5" width="6" height="4" rx="2" fill="#BDBDBD"/>
+  <text x="30" y="55" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="white" text-anchor="middle">COLA</text>
+</svg>`);
+
+const PRIZES = [
+  { num:1, name:'5만원 식사권',         pct: 0.2, color:'#AA00FF', emoji:'⭐', img: TICKET_GOLD      },
+  { num:2, name:'1만원 식사권',         pct: 3.8, color:'#FF1744', emoji:'🎫', img: TICKET_SILVER    },
+  { num:3, name:&파송송계란찜',         pct:20,   color:'#FFAB00', emoji:'🥘', img:null               },
+  { num:4, name:'흑돼지 김치찌개 리필', pct:25,   color:'#00C853', emoji:'🍲', img:'prize_kimchi.jpg' },
+  { num:5, name:'한라봉주스',           pct:11,   color:'#2979FF', emoji:'🧃', img: BOTTLE_JUICE      },
+  { num:6, name:'탄산음료',             pct:40,   color:'#00BFA5', emoji:'🥤', img: CAN_COLA          },
 ];
-const list=document.getElementById('prizeList');
-PRIZES.forEach(p=>{
-  const card=document.createElement('div');
-  card.className='prize-card';
-  card.innerHTML=`<div class="prize-num" style="background:${p.color}">${p.num}</div><div class="prize-img-wrap">${p.img?'<img src="'+p.img+'" alt="'+p.name+'" onerror="this.parentNode.innerHTML='<span class=\\'prize-img-emoji\\'>'+p.emoji+'</span>'">':'<span class="prize-img-emoji">'+p.emoji+'</span>'}</div><div class="prize-info"><div class="prize-name">${p.name}</div></div>`;
+// ═══════════════════════════════════════════════
+
+// 경품 목록 카드 렌더링
+const list = document.getElementById('prizeList');
+PRIZES.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'prize-card';
+  card.innerHTML = `
+    <div class="prize-num" style="background:${p.color}">${p.num}</div>
+    <div class="prize-img-wrap">
+      ${p.img
+        ? `<img src="${p.img}" alt="${p.name}" onerror="this.parentNode.innerHTML='<span class=\\'prize-img-emoji\\'>${p.emoji}</span>'">`
+        : `<span class="prize-img-emoji">${p.emoji}</span>`}
+    </div>
+    <div class="prize-info">
+      <div class="prize-name">${p.name}</div>
+    </div>`;
   list.appendChild(card);
 });
-const TWO_PI=Math.PI*2;
-const canvas=document.getElementById('wheelCanvas');
-const ctx=canvas.getContext('2d');
-const W=canvas.width,CX=W/2,CY=W/2,R=CX-22;
-const EQUAL_SPAN=TWO_PI/PRIZES.length;
-const SEGS=PRIZES.map((p,i)=>{const s=i*EQUAL_SPAN-Math.PI/2;const e=s+EQUAL_SPAN;return{...p,s,e,mid:(s+e)/2};});
-let rotation=0,spinning=false;
-function drawWheel(rot){
+
+// ── 캔버스 룰렛 ────────────────────────────────
+const TWO_PI = Math.PI * 2;
+const canvas = document.getElementById('wheelCanvas');
+const ctx    = canvas.getContext('2d');
+const W = canvas.width;
+const CX = W/2, CY = W/2, R = CX - 22;
+
+// 시각적 칸은 균등 분할 (긴장감 극대화), 확률은 pct로만 결정
+const EQUAL_SPAN = TWO_PI / PRIZES.length;
+const SEGS = PRIZES.map((p, i) => {
+  const s = i * EQUAL_SPAN - Math.PI/2;
+  const e = s + EQUAL_SPAN;
+  return { ...p, s, e, mid:(s+e)/2 };
+});
+
+let rotation = 0, spinning = false;
+
+function drawWheel(rot) {
   ctx.clearRect(0,0,W,W);
-  ctx.beginPath();ctx.arc(CX,CY,R+18,0,TWO_PI);ctx.fillStyle='#1a0800';ctx.fill();
-  ctx.beginPath();ctx.arc(CX,CY,R+13,0,TWO_PI);ctx.strokeStyle='#FFD700';ctx.lineWidth=7;ctx.stroke();
-  for(const seg of SEGS){
-    const s=seg.s+rot,e=seg.e+rot,m=(s+e)/2;
-    ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,R,s,e);ctx.closePath();
-    ctx.fillStyle=seg.color;ctx.fill();ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=2;ctx.stroke();
-    const nr=R*0.72,nx=CX+nr*Math.cos(m),ny=CY+nr*Math.sin(m);
-    ctx.save();ctx.beginPath();ctx.arc(nx,ny,22,0,TWO_PI);ctx.fillStyle='rgba(0,0,0,0.35)';ctx.fill();
-    ctx.font='bold 26px -apple-system,sans-serif';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor='rgba(0,0,0,0.6)';ctx.shadowBlur=4;ctx.fillText(seg.num,nx,ny+1);ctx.restore();
+
+  // 외곽
+  ctx.beginPath(); ctx.arc(CX,CY,R+18,0,TWO_PI);
+  ctx.fillStyle='#1a0800'; ctx.fill();
+  ctx.beginPath(); ctx.arc(CX,CY,R+13,0,TWO_PI);
+  ctx.strokeStyle=var_gold(); ctx.lineWidth=7; ctx.stroke();
+
+  for (const seg of SEGS) {
+    const s = seg.s+rot, e = seg.e+rot, m = (s+e)/2;
+
+    // 세그먼트
+    ctx.beginPath(); ctx.moveTo(CX,CY);
+    ctx.arc(CX,CY,R,s,e); ctx.closePath();
+    ctx.fillStyle = seg.color; ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=2; ctx.stroke();
+
+    // 번호 표시
+    const nr = R * 0.72;
+    const nx = CX + nr * Math.cos(m);
+    const ny = CY + nr * Math.sin(m);
+
+    ctx.save();
+    // 번호 원 배경
+    ctx.beginPath(); ctx.arc(nx,ny,22,0,TWO_PI);
+    ctx.fillStyle='rgba(0,0,0,0.35)'; ctx.fill();
+
+    ctx.font = 'bold 26px -apple-system, sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 4;
+    ctx.fillText(seg.num, nx, ny+1);
+    ctx.restore();
   }
-  const g=ctx.createRadialGradient(CX,CY,0,CX,CY,52);
-  g.addColorStop(0,'#FFE566');g.addColorStop(1,'#FF6F00');
-  ctx.beginPath();ctx.arc(CX,CY,52,0,TWO_PI);ctx.fillStyle=g;ctx.fill();
-  ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=3;ctx.stroke();
-  ctx.font='bold 22px -apple-system,sans-serif';ctx.fillStyle='#1a0800';ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowBlur=0;ctx.fillText('GO!',CX,CY+2);
+
+  // 중앙 허브
+  const g = ctx.createRadialGradient(CX,CY,0,CX,CY,52);
+  g.addColorStop(0,'#FFE566'); g.addColorStop(1,'#FF6F00');
+  ctx.beginPath(); ctx.arc(CX,CY,52,0,TWO_PI);
+  ctx.fillStyle=g; ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=3; ctx.stroke();
+
+  ctx.font='bold 22px -apple-system,sans-serif';
+  ctx.fillStyle='#1a0800';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.shadowBlur=0;
+  ctx.fillText('GO!', CX, CY+2);
 }
-function pickWinner(){let r=Math.random()*100,c=0;for(const p of PRIZES){c+=p.pct;if(r<c)return p;}return PRIZES[PRIZES.length-1];}
-function spin(){
-  if(spinning)return;spinning=true;document.getElementById('spinBtn').disabled=true;
-  const winner=pickWinner();const seg=SEGS.find(s=>s.num===winner.num);
-  const base=-Math.PI/2-seg.mid;const min=rotation+TWO_PI*(8+Math.floor(Math.random()*5));
-  const n=Math.ceil((min-base)/TWO_PI);const target=base+n*TWO_PI;
-  const dur=4300+Math.random()*800,t0=performance.now(),r0=rotation;
-  const ease=t=>1-Math.pow(1-t,4);
-  (function frame(now){const t=Math.min((now-t0)/dur,1);rotation=r0+(target-r0)*ease(t);drawWheel(rotation);if(t<1){requestAnimationFrame(frame);}else{rotation=target;spinning=false;showResult(winner);}})(performance.now());
+
+function var_gold() { return '#FFD700'; }
+
+function pickWinner() {
+  let r=Math.random()*100, c=0;
+  for (const p of PRIZES){ c+=p.pct; if(r<c) return p; }
+  return PRIZES[PRIZES.length-1];
 }
-function showResult(w){
-  localStorage.setItem('jejutgan_spun','1');localStorage.setItem('jejutgan_prize',w.num);
-  const wrap=document.getElementById('rImgWrap');
-  if(w.img){wrap.innerHTML='<img src="'+w.img+'" alt="'+w.name+'" onerror="this.parentNode.innerHTML='<div class=\\'result-emoji-big\\'>'+w.emoji+'</div>'">';}
-  else{wrap.innerHTML='<div class="result-emoji-big">'+w.emoji+'</div>';}
-  document.getElementById('rPrize').textContent=w.name;document.getElementById('overlay').classList.add('show');confetti();
+
+function spin() {
+  if (spinning) return;
+  spinning = true;
+  document.getElementById('spinBtn').disabled = true;
+
+  const winner = pickWinner();
+  const seg    = SEGS.find(s => s.num === winner.num);
+  const base   = -Math.PI/2 - seg.mid;
+  const min    = rotation + TWO_PI*(8+Math.floor(Math.random()*5));
+  const n      = Math.ceil((min-base)/TWO_PI);
+  const target = base + n*TWO_PI;
+
+  const dur = 4300+Math.random()*800;
+  const t0  = performance.now();
+  const r0  = rotation;
+  const ease = t => 1-Math.pow(1-t,4);
+
+  (function frame(now){
+    const t = Math.min((now-t0)/dur,1);
+    rotation = r0+(target-r0)*ease(t);
+    drawWheel(rotation);
+    if(t<1){ requestAnimationFrame(frame); }
+    else { rotation=target; spinning=false; showResult(winner); }
+  })(performance.now());
 }
-function closeResult(){
+
+function showResult(w) {
+  // 참여 기록 + 당첨 경품 저장
+  localStorage.setItem('jejutgan_spun', '1');
+  localStorage.setItem('jejutgan_prize', w.num);
+
+  // 이미지 or 이모지
+  const wrap = document.getElementById('rImgWrap');
+  if (w.img) {
+    wrap.innerHTML = `<img src="${w.img}" alt="${w.name}"
+      onerror="this.parentNode.innerHTML='<div class=\\'result-emoji-big\\'>${w.emoji}</div>'">`;
+  } else {
+    wrap.innerHTML = `<div class="result-emoji-big">${w.emoji}</div>`;
+  }
+  document.getElementById('rPrize').textContent = w.name;
+  document.getElementById('overlay').classList.add('show');
+  confetti();
+}
+
+function closeResult() {
   document.getElementById('overlay').classList.remove('show');
-  if(!localStorage.getItem(STORAGE_KEY)){document.getElementById('spinBtn').disabled=false;}
-  else{if(!document.getElementById('alreadyCard')){showAlreadyCard();}}
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    document.getElementById('spinBtn').disabled = false;
+  } else {
+    // 모달 닫은 직후 당첨 카드 표시 (이미 카드 없을 때만)
+    if (!document.getElementById('alreadyCard')) {
+      showAlreadyCard();
+    }
+  }
 }
-function confetti(){
-  const cols=['#FFD700','#FF8C00','#FF4444','#42A5F5','#66BB6A','#EC407A','#fff'];
-  for(let i=0;i<70;i++){const el=document.createElement('div');el.className='confetti';const sz=7+Math.random()*9;el.style.cssText=['left:'+Math.random()*100+'vw','background:'+cols[i%cols.length],'width:'+sz+'px','height:'+sz+'px','border-radius:'+(Math.random()>.5?'50%':'3px'),'animation-delay:'+(Math.random()*.7).toFixed(2)+'s','animation-duration:'+(2.2+Math.random()*1.4).toFixed(2)+'s'].join(';');document.body.appendChild(el);el.addEventListener('animationend',()=>el.remove());}
+
+function confetti() {
+  const cols = ['#FFD700','#FF8C00','#FF4444','#42A5F5','#66BB6A','#EC407A','#fff'];
+  for(let i=0;i<70;i++){
+    const el=document.createElement('div');
+    el.className='confetti';
+    const sz=7+Math.random()*9;
+    el.style.cssText=[
+      `left:${Math.random()*100}vw`,
+      `background:${cols[i%cols.length]}`,
+      `width:${sz}px`,`height:${sz}px`,
+      `border-radius:${Math.random()>.5?'50%':'3px'}`,
+      `animation-delay:${(Math.random()*.7).toFixed(2)}s`,
+      `animation-duration:${(2.2+Math.random()*1.4).toFixed(2)}s`,
+    ].join(';');
+    document.body.appendChild(el);
+    el.addEventListener('animationend',()=>el.remove());
+  }
 }
-const STORAGE_KEY='jejutgan_spun';
-function showAlreadyCard(){
-  const btn=document.getElementById('spinBtn');btn.disabled=true;btn.textContent='✅ 이미 참여하셨습니다';
-  const savedNum=parseInt(localStorage.getItem('jejutgan_prize'),10);const w=PRIZES.find(p=>p.num===savedNum);
-  const card=document.createElement('div');card.id='alreadyCard';
-  card.style.cssText='margin-top:20px;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.35);border-radius:20px;padding:20px 18px;text-align:center;width:100%;max-width:480px;';
-  if(w){
-    const imgHtml=w.img?'<img src="'+w.img+'" alt="'+w.name+'" style="width:110px;height:110px;object-fit:cover;border-radius:14px;margin-bottom:12px;border:2px solid rgba(255,215,0,0.3);" onerror="this.outerHTML='<div style=\\'font-size:64px;margin-bottom:12px;\\'>'+w.emoji+'</div>'">':'<div style="font-size:64px;margin-bottom:12px;">'+w.emoji+'</div>';
-    card.innerHTML=imgHtml+'<div style="font-size:12px;color:rgba(255,255,255,0.45);letter-spacing:1px;margin-bottom:6px;">🎊 회원님의 당첨 경품</div><div style="font-size:22px;font-weight:900;background:linear-gradient(135deg,#FFD700,#FF8C00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;">'+w.name+'</div><div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.6;">직원에게 이 화면을 보여주시면<br>혜택을 받으실 수 있습니다 😊</div>';
-  }else{card.innerHTML='<div style="font-size:13px;color:rgba(255,255,255,0.45);">이벤트는 1인 1회만 참여 가능합니다.</div>';}
-  btn.parentNode.insertBefore(card,btn.nextSibling);
+
+// ── 중복 참여 방지 (localStorage) ─────────────
+const STORAGE_KEY = 'jejutgan_spun';
+
+function showAlreadyCard() {
+  const btn = document.getElementById('spinBtn');
+  btn.disabled = true;
+  btn.textContent = '✅ 이미 참여하셨습니다';
+
+  const savedNum = parseInt(localStorage.getItem('jejutgan_prize'), 10);
+  const w = PRIZES.find(p => p.num === savedNum);
+
+  const card = document.createElement('div');
+  card.id = 'alreadyCard';
+  card.style.cssText = [
+    'margin-top:20px',
+    'background:rgba(255,215,0,0.08)',
+    'border:1px solid rgba(255,215,0,0.35)',
+    'border-radius:20px',
+    'padding:20px 18px',
+    'text-align:center',
+    'width:100%',
+    'max-width:480px',
+  ].join(';');
+
+  if (w) {
+    const imgHtml = w.img
+      ? `<img src="${w.img}" alt="${w.name}"
+           style="width:110px;height:110px;object-fit:cover;border-radius:14px;margin-bottom:12px;border:2px solid rgba(255,215,0,0.3);"
+           onerror="this.outerHTML='<div style=\\'font-size:64px;margin-bottom:12px;\\'>${w.emoji}</div>'">`
+      : `<div style="font-size:64px;margin-bottom:12px;">${w.emoji}</div>`;
+
+    card.innerHTML = `
+      ${imgHtml}
+      <div style="font-size:12px;color:rgba(255,255,255,0.45);letter-spacing:1px;margin-bottom:6px;">🎊 회원님의 당첨 경품</div>
+      <div style="font-size:22px;font-weight:900;background:linear-gradient(135deg,#FFD700,#FF8C00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;">${w.name}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.6;">직원에게 이 화면을 보여주시면<br>혜택을 받으실 수 있습니다 😊</div>
+    `;
+  } else {
+    card.innerHTML = `
+      <div style="font-size:13px;color:rgba(255,255,255,0.45);">이벤트는 1인 1회만 참여 가능합니다.</div>
+    `;
+  }
+
+  btn.parentNode.insertBefore(card, btn.nextSibling);
 }
-function checkAlreadySpun(){if(localStorage.getItem(STORAGE_KEY)){showAlreadyCard();}}
-document.getElementById('spinBtn').addEventListener('click',spin);
-drawWheel(0);checkAlreadySpun();
+
+function checkAlreadySpun() {
+  if (localStorage.getItem(STORAGE_KEY)) {
+    showAlreadyCard();
+  }
+}
+
+document.getElementById('spinBtn').addEventListener('click', spin);
+drawWheel(0);
+checkAlreadySpun();
 </script>
 </body>
 </html>
